@@ -7,6 +7,12 @@ tried to keep dependencies as small as possible.
 
 Import
 
+    <dependency>
+      <groupId>com.github.realzimboguy.ewelink.api</groupId>
+      <artifactId>ewelink-api-java</artifactId>
+      <version>2.0.0-RELEASE</version>
+    </dependency>
+
 
 Usage
 
