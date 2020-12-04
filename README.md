@@ -16,9 +16,31 @@ Import
 
 Usage
 
-Please refer to the TestApp class
+Please refer to the Below example 
 
-     EweLink eweLink = new EweLink("eu","username@gmail.com","password",10);
+Params for the EWeLink Constructor
+- region eg us/eu
+- username
+- password
+- interval in Minutes for re-login eg, if the api was last called more than 60 min ago, it will perform a login before executing the command.
+
+You must perform a login before calling any other methods, the methods exposed are:
+
+    public void login() throws Exception
+    
+    public Devices getDevices() throws Exception
+    
+    public DeviceItem getDevice(String deviceId) throws Exception
+    
+    public Status getDeviceStatus(String deviceId) throws Exception
+    
+    public Status setDeviceStatusByName(String name, String status) throws Exception
+    
+    public Status setDeviceStatus(String deviceId, String status) throws Exception
+
+sample 
+
+     EweLink eweLink = new EweLink("eu","username@gmail.com","password",60);
     
             try {
                 eweLink.login();
@@ -42,5 +64,5 @@ Please refer to the TestApp class
                 e.printStackTrace();
             }
 
-tags
+tags: 
 sonoff eweelink api automation java code library

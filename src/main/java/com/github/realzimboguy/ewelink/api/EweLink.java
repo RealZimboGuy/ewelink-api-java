@@ -190,7 +190,6 @@ public class EweLink {
 
     }
 
-
     public DeviceItem getDevice(String deviceId) throws Exception {
 
         if (!isLoggedIn){
@@ -425,7 +424,7 @@ public class EweLink {
 
     }
 
-    public static String getAuthMac (String data) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+    private static String getAuthMac (String data) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
 
         Mac sha256_HMAC = null;
 
