@@ -2,7 +2,9 @@
 # ewelink-api-java
 > eWeLink API written in JAVA
 
-This is a java Libarary based on the ewelink-api node project found here
+Website doc: http://ewelink-api-java.co.zw
+
+This is a java Library based on the ewelink-api node project found here
 
 https://github.com/skydiver/ewelink-api/
 
