@@ -16,7 +16,7 @@ Import
     <dependency>
       <groupId>com.github.realzimboguy.ewelink.api</groupId>
       <artifactId>ewelink-api-java</artifactId>
-      <version>2.0.0-RELEASE</version>
+      <version>2.1.0-RELEASE</version>
     </dependency>
 
 
