@@ -6,6 +6,8 @@ import com.github.realzimboguy.ewelink.api.model.Status;
 import com.github.realzimboguy.ewelink.api.model.StatusChange;
 import com.github.realzimboguy.ewelink.api.model.login.LoginRequest;
 import com.github.realzimboguy.ewelink.api.model.login.LoginResponse;
+import com.github.realzimboguy.ewelink.api.wss.WssLogin;
+import com.github.realzimboguy.ewelink.api.wss.WssResponse;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -25,12 +28,12 @@ public class EweLink {
 
     Logger logger = LoggerFactory.getLogger(EweLink.class);
 
-    private String region;
+    private static String region;
     private String email;
     private String password;
     private int activityTimer;
     private String baseUrl = "https://eu-api.coolkit.cc:8080/api/";
-    private static final String APP_ID = "YzfeftUVcZ6twZw1OoVKPRFYTrGEg01Q";
+    public static final String APP_ID = "YzfeftUVcZ6twZw1OoVKPRFYTrGEg01Q";
     private static final String APP_SECRET = "4G91qSoboqYO4Y0XJ0LPPKIsq8reHdfa";
     private static boolean isLoggedIn = false;
     private static long lastActivity = 0L;
@@ -39,8 +42,10 @@ public class EweLink {
 
     private static String accessToken;
     private static String apiKey;
+    private static WssResponse clientWssResponse;
 
-
+    private static EweLinkWebSocketClient eweLinkWebSocketClient = null;
+    private static Thread webSocketMonitorThread = null;
     Gson gson = new Gson();
 
     public EweLink(String region,String email, String password, int activityTimer) {
@@ -50,8 +55,8 @@ public class EweLink {
       if (region!= null) {
           baseUrl = "https://" + region + "-api.coolkit.cc:8080/api/";
       }
-      if (activityTimer == 0) {
-          activityTimer = 1;
+      if (activityTimer < 30) {
+          activityTimer = 30;
       }
       this.activityTimer = activityTimer;
 
@@ -130,6 +135,25 @@ public class EweLink {
             }
 
         }
+
+    }
+
+    public void getWebSocket(WssResponse wssResponse) throws Exception {
+        if (!isLoggedIn){
+            throw new Exception("Not Logged In, please call login Method");
+        }
+
+        eweLinkWebSocketClient = new EweLinkWebSocketClient(new URI("wss://"+ region+"-pconnect3.coolkit.cc:8080/api/ws"));
+        clientWssResponse = wssResponse;
+        eweLinkWebSocketClient.setWssResponse(clientWssResponse);
+        eweLinkWebSocketClient.setWssLogin(gson.toJson(new WssLogin(accessToken,apiKey,APP_ID,Util.getNonce())));
+        eweLinkWebSocketClient.connect();
+
+        if(webSocketMonitorThread == null) {
+            webSocketMonitorThread = new Thread(new WebSocketMonitor());
+            webSocketMonitorThread.start();
+        }
+
 
     }
 
@@ -439,6 +463,42 @@ public class EweLink {
         return Base64.getEncoder().encodeToString(mac_data);
 
 
+    }
+
+
+    public class WebSocketMonitor implements  Runnable
+    {
+
+        Logger logger = LoggerFactory.getLogger(WebSocketMonitor.class);
+        Gson gson = new Gson();
+
+
+        @Override
+        public void run() {
+
+            logger.info("Websocket Monitor Thread start");
+
+            while (true) {
+                try {
+                    Thread.sleep(30000);
+                    logger.debug("send websocket ping");
+                    eweLinkWebSocketClient.send("ping");
+
+                } catch (Exception e) {
+                    logger.error("Error in sening websocket ping:",e);
+                    logger.info("Try reconnect to websocket");
+                    try {
+                        eweLinkWebSocketClient = new EweLinkWebSocketClient(new URI("wss://"+ region+"-pconnect3.coolkit.cc:8080/api/ws"));
+                        eweLinkWebSocketClient.setWssResponse(clientWssResponse);
+                        eweLinkWebSocketClient.setWssLogin(gson.toJson(new WssLogin(accessToken,apiKey,APP_ID,Util.getNonce())));
+                        eweLinkWebSocketClient.connect();
+
+                    }catch (Exception c) {
+                        logger.error("Error trying to reconnect:",c);
+                    }
+                }
+            }
+        }
     }
 
 

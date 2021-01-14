@@ -43,6 +43,8 @@ You must perform a login before calling any other methods, the methods exposed a
     public Status setDeviceStatusByName(String name, String status) throws Exception
     
     public Status setDeviceStatus(String deviceId, String status) throws Exception
+    
+    public void getWebSocket(WssResponse wssResponse) throws Exception
 
 sample 
 
@@ -64,6 +66,48 @@ sample
                 System.out.println(eweLink.getDevice("10009ce53b"));
  
                 System.out.println(eweLink.setDeviceStatusByName("Pool Tank","off"));
+                
+                eweLink.getWebSocket(new WssResponse() {
+                
+                                @Override
+                                public void onMessage(String s) {
+                                    //if you want the raw json data
+                                    System.out.println("on message in test raw:" + s);
+                
+                                }
+                
+                                @Override
+                                public void onMessageParsed(WssRspMsg rsp) {
+                
+                                    if (rsp.getError() == null) {
+                
+                                        //normal scenario
+                                        StringBuilder sb = new StringBuilder();
+                                        sb.append("Device:").append(rsp.getDeviceid()).append(" - ");
+                                        if (rsp.getParams() != null) {
+                                            sb.append("Switch:").append(rsp.getParams().getSwitch()).append(" - ");
+                                            sb.append("Voltage:").append(rsp.getParams().getVoltage()).append(" - ");
+                                            sb.append("Power:").append(rsp.getParams().getPower()).append(" - ");
+                                            sb.append("Current:").append(rsp.getParams().getCurrent()).append(" - ");
+                                        }
+                
+                                        System.out.println(sb.toString());
+                
+                                    } else if (rsp.getError() == 0) {
+                                        //this is from a login response
+                                        System.out.println("login success");
+                                    } else if (rsp.getError() > 0) {
+                                        System.out.println("login error:" + rsp.toString());
+                                    }
+                                }
+                
+                                @Override
+                                public void onError(String error) {
+                                    System.out.println("onError in test, this should never be called");
+                                    System.out.println(error);
+                
+                                }
+                            });
     
     
             } catch (Exception e) {

@@ -6,3 +6,5 @@ target/
 
 src/test/java/com/github/realzimboguy/ewelink/api/TestAppPrivate.java
 src/test/java/com/github/realzimboguy/ewelink/api/TestApp.java
+
+.idea/

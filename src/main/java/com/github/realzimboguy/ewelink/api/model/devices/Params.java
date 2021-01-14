@@ -1,6 +1,8 @@
 
 package com.github.realzimboguy.ewelink.api.model.devices;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,7 @@ public class Params {
 
     private BindInfos bindInfos;
     private String sledOnline;
+    @SerializedName("switch")
     private String _switch;
     private String power;
     private String voltage;
@@ -269,4 +272,38 @@ public class Params {
         this.additionalProperties.put(name, value);
     }
 
+    @Override
+    public String toString() {
+        return "Params{" +
+                "bindInfos=" + bindInfos +
+                ", sledOnline='" + sledOnline + '\'' +
+                ", _switch='" + _switch + '\'' +
+                ", power='" + power + '\'' +
+                ", voltage='" + voltage + '\'' +
+                ", current='" + current + '\'' +
+                ", fwVersion='" + fwVersion + '\'' +
+                ", staMac='" + staMac + '\'' +
+                ", rssi=" + rssi +
+                ", init=" + init +
+                ", alarmType='" + alarmType + '\'' +
+                ", alarmVValue=" + alarmVValue +
+                ", alarmCValue=" + alarmCValue +
+                ", alarmPValue=" + alarmPValue +
+                ", oneKwh='" + oneKwh + '\'' +
+                ", uiActive=" + uiActive +
+                ", timeZone=" + timeZone +
+                ", version=" + version +
+                ", startup='" + startup + '\'' +
+                ", pulse='" + pulse + '\'' +
+                ", pulseWidth=" + pulseWidth +
+                ", timers=" + timers +
+                ", hundredDaysKwh='" + hundredDaysKwh + '\'' +
+                ", onlyDevice=" + onlyDevice +
+                ", ssid='" + ssid + '\'' +
+                ", bssid='" + bssid + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", additionalProperties=" + additionalProperties +
+                '}';
+    }
 }
