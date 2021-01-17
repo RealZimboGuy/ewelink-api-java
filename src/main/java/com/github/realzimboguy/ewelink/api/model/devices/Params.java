@@ -38,6 +38,15 @@ public class Params {
     private String bssid;
     private String endTime;
     private String startTime;
+
+    private String subDevId;
+    private String parentid;
+    private String battery;
+    private String trigTime;
+    private String temperature;
+    private String humidity;
+
+
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public BindInfos getBindInfos() {
@@ -272,6 +281,66 @@ public class Params {
         this.additionalProperties.put(name, value);
     }
 
+    public String get_switch() {
+        return _switch;
+    }
+
+    public void set_switch(String _switch) {
+        this._switch = _switch;
+    }
+
+    public String getSubDevId() {
+        return subDevId;
+    }
+
+    public void setSubDevId(String subDevId) {
+        this.subDevId = subDevId;
+    }
+
+    public String getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(String parentid) {
+        this.parentid = parentid;
+    }
+
+    public String getBattery() {
+        return battery;
+    }
+
+    public void setBattery(String battery) {
+        this.battery = battery;
+    }
+
+    public String getTrigTime() {
+        return trigTime;
+    }
+
+    public void setTrigTime(String trigTime) {
+        this.trigTime = trigTime;
+    }
+
+    public String getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(String temperature) {
+        this.temperature = temperature;
+    }
+
+    public String getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
+    }
+
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
+    }
+
     @Override
     public String toString() {
         return "Params{" +
@@ -303,6 +372,12 @@ public class Params {
                 ", bssid='" + bssid + '\'' +
                 ", endTime='" + endTime + '\'' +
                 ", startTime='" + startTime + '\'' +
+                ", subDevId='" + subDevId + '\'' +
+                ", parentid='" + parentid + '\'' +
+                ", battery='" + battery + '\'' +
+                ", trigTime='" + trigTime + '\'' +
+                ", temperature='" + temperature + '\'' +
+                ", humidity='" + humidity + '\'' +
                 ", additionalProperties=" + additionalProperties +
                 '}';
     }
