@@ -1,5 +1,6 @@
 package com.github.realzimboguy.ewelink.api;
 
+import com.github.realzimboguy.ewelink.api.errors.DeviceOfflineError;
 import com.github.realzimboguy.ewelink.api.model.devices.DeviceItem;
 import com.github.realzimboguy.ewelink.api.model.devices.Devices;
 import com.github.realzimboguy.ewelink.api.model.Status;
@@ -322,6 +323,11 @@ public class EweLink {
 
             if (status.getError() > 0){
                 //something wrong with login, throw exception back up with msg
+
+                if (status.getError() == 503){
+                    throw new DeviceOfflineError("Status Error:" + status.toString());
+                }
+
                 throw new Exception("Status Error:" + status.toString());
 
             }else {

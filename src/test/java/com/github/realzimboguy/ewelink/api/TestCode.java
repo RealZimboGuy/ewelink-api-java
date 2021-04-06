@@ -1,5 +1,6 @@
 package com.github.realzimboguy.ewelink.api;
 
+import com.github.realzimboguy.ewelink.api.errors.DeviceOfflineError;
 import com.github.realzimboguy.ewelink.api.model.devices.DeviceItem;
 import com.github.realzimboguy.ewelink.api.model.devices.Devices;
 import com.github.realzimboguy.ewelink.api.wss.WssResponse;
@@ -10,7 +11,7 @@ public class TestCode {
     public static void main(String[] args) {
 
 
-        EweLink eweLink = new EweLink("eu", "asdf@gmail.com", "asdf", 60);
+        EweLink eweLink = new EweLink("eu", "test@gmail.com", "test", 60);
 
         try {
             eweLink.login();
@@ -20,9 +21,11 @@ public class TestCode {
             for (DeviceItem devicelist : getDevices.getDevicelist()) {
                 System.out.println(devicelist.getDeviceid());
                 System.out.println(devicelist.getName());
-
-                System.out.println(eweLink.getDeviceStatus(devicelist.getDeviceid()));
-
+                try {
+                    System.out.println(eweLink.getDeviceStatus(devicelist.getDeviceid()));
+                }catch (DeviceOfflineError d){
+                    d.printStackTrace();
+                }
             }
 
             eweLink.getWebSocket(new WssResponse() {
