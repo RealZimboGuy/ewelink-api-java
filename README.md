@@ -8,15 +8,17 @@ This is a java Library based on the ewelink-api node project found here
 
 https://github.com/skydiver/ewelink-api/
 
-All credit goes to them ^^, else this lib would not be possible. Not all features have been added as I dont need them. feel free to submit pull requests.
+Not all features have been added as I dont need them. feel free to submit pull requests.
 tried to keep dependencies as small as possible. 
+
+** 2.1.3-RELEASE ** Critical fix to app id and secret, previous stopped working
 
 Import
 
     <dependency>
       <groupId>com.github.realzimboguy.ewelink.api</groupId>
       <artifactId>ewelink-api-java</artifactId>
-      <version>2.1.2-RELEASE</version>
+      <version>2.1.3-RELEASE</version>
     </dependency>
 
 
