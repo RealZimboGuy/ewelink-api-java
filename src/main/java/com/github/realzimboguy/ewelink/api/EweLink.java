@@ -34,8 +34,8 @@ public class EweLink {
     private String password;
     private int activityTimer;
     private String baseUrl = "https://eu-api.coolkit.cc:8080/api/";
-    public static final String APP_ID = "YzfeftUVcZ6twZw1OoVKPRFYTrGEg01Q";
-    private static final String APP_SECRET = "4G91qSoboqYO4Y0XJ0LPPKIsq8reHdfa";
+    public static final String APP_ID = "Uw83EKZFxdif7XFXEsrpduz5YyjP7nTl";
+    private static final String APP_SECRET = "mXLOjea0woSMvK9gw7Fjsy7YlFO4iSu6";
     private static boolean isLoggedIn = false;
     private static long lastActivity = 0L;
     private static final int TIMEOUT = 5000;
