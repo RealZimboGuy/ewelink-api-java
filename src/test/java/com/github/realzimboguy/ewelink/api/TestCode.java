@@ -1,31 +1,45 @@
 package com.github.realzimboguy.ewelink.api;
 
 import com.github.realzimboguy.ewelink.api.errors.DeviceOfflineError;
-import com.github.realzimboguy.ewelink.api.model.devices.DeviceItem;
-import com.github.realzimboguy.ewelink.api.model.devices.Devices;
+import com.github.realzimboguy.ewelink.api.model.home.Thing;
 import com.github.realzimboguy.ewelink.api.wss.WssResponse;
 import com.github.realzimboguy.ewelink.api.wss.wssrsp.WssRspMsg;
+import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TestCode {
+
+
+    private static final Logger logger = LoggerFactory.getLogger(TestCode.class);
 
     public static void main(String[] args) {
 
 
-        EweLink eweLink = new EweLink("eu", "test@gmail.com", "test", 60);
+        Gson gson = new Gson();
+        EweLink eweLink = new EweLink("eu", "test@gmail.com", "test", "+263",60);
 
         try {
             eweLink.login();
 
-            Devices getDevices = eweLink.getDevices();
+            List<Thing> things = eweLink.getThings();
 
-            for (DeviceItem devicelist : getDevices.getDevicelist()) {
-                System.out.println(devicelist.getDeviceid());
-                System.out.println(devicelist.getName());
-                try {
-                    System.out.println(eweLink.getDeviceStatus(devicelist.getDeviceid()));
-                }catch (DeviceOfflineError d){
-                    d.printStackTrace();
-                }
+
+            logger.info("PRINT DEVICE_ID, NAME, ONLINE, SWITCH, VOLTAGE");
+            for (Thing thing : things) {
+                logger.info("{}, {}, {}, {}, {}",
+                        thing.getItemData().getDeviceid() ,
+                        thing.getItemData().getName() ,
+                        thing.getItemData().getOnline(),
+                        thing.getItemData().getParams().getSwitch(),
+                        thing.getItemData().getParams().getVoltage());
+            }
+            logger.info("PRINT JSON OBJECTS");
+            for (Thing thing : things) {
+                logger.info("{} ",gson.toJson(thing));
             }
 
             eweLink.getWebSocket(new WssResponse() {
@@ -71,9 +85,12 @@ public class TestCode {
             });
 
 
-//            System.out.println(eweLink.getDevice("10009ce53b"));
+            Thread.sleep(10000);
+            System.out.println(eweLink.setDeviceStatus("1000f40d35", "on"));
+            Thread.sleep(5000);
+            System.out.println(eweLink.setDeviceStatus("1000f40d35", "off"));
 
-//            System.out.println(eweLink.setDeviceStatusByName("Pool Tank","off"));
+
 
 
         } catch (Exception e) {

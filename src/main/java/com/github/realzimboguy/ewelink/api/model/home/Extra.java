@@ -1,23 +1,46 @@
 
-package com.github.realzimboguy.ewelink.api.model.devices;
+package com.github.realzimboguy.ewelink.api.model.home;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class Extra_ {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
+
+public class Extra {
+
+    @SerializedName("uiid")
+    @Expose
     private Integer uiid;
+    @SerializedName("description")
+    @Expose
     private String description;
+    @SerializedName("brandId")
+    @Expose
     private String brandId;
+    @SerializedName("apmac")
+    @Expose
     private String apmac;
+    @SerializedName("mac")
+    @Expose
     private String mac;
+    @SerializedName("ui")
+    @Expose
     private String ui;
+    @SerializedName("modelInfo")
+    @Expose
     private String modelInfo;
+    @SerializedName("model")
+    @Expose
     private String model;
+    @SerializedName("manufacturer")
+    @Expose
     private String manufacturer;
+    @SerializedName("staMac")
+    @Expose
     private String staMac;
+    @SerializedName("chipid")
+    @Expose
     private String chipid;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getUiid() {
         return uiid;
@@ -107,12 +130,20 @@ public class Extra_ {
         this.chipid = chipid;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @Override
+    public String toString() {
+        return "Extra{" +
+                "uiid=" + uiid +
+                ", description='" + description + '\'' +
+                ", brandId='" + brandId + '\'' +
+                ", apmac='" + apmac + '\'' +
+                ", mac='" + mac + '\'' +
+                ", ui='" + ui + '\'' +
+                ", modelInfo='" + modelInfo + '\'' +
+                ", model='" + model + '\'' +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", staMac='" + staMac + '\'' +
+                ", chipid='" + chipid + '\'' +
+                '}';
     }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
 }

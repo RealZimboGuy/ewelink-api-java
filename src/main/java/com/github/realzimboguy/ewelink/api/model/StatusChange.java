@@ -1,13 +1,60 @@
 package com.github.realzimboguy.ewelink.api.model;
 
+import com.github.realzimboguy.ewelink.api.model.home.Params;
+
 public class StatusChange {
 
-    private String deviceid;
-    private String version;
-    private String appid;
-    private String ts;
-    private String params;
 
+
+    private Integer error;
+    private String sequence;
+    private String userAgent;
+    private String action;
+    private String deviceid;
+    private String apikey;
+    private String selfApikey;
+    private Params params;
+
+
+    public Integer getError() {
+        return error;
+    }
+
+    public void setError(Integer error) {
+        this.error = error;
+    }
+
+    public Params getParams() {
+        return params;
+    }
+
+    public void setParams(Params params) {
+        this.params = params;
+    }
+
+    public String getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(String sequence) {
+        this.sequence = sequence;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
 
     public String getDeviceid() {
         return deviceid;
@@ -17,46 +64,34 @@ public class StatusChange {
         this.deviceid = deviceid;
     }
 
-    public String getVersion() {
-        return version;
+    public String getApikey() {
+        return apikey;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setApikey(String apikey) {
+        this.apikey = apikey;
     }
 
-    public String getAppid() {
-        return appid;
+    public String getSelfApikey() {
+        return selfApikey;
     }
 
-    public void setAppid(String appid) {
-        this.appid = appid;
+    public void setSelfApikey(String selfApikey) {
+        this.selfApikey = selfApikey;
     }
 
-    public String getTs() {
-        return ts;
-    }
-
-    public void setTs(String ts) {
-        this.ts = ts;
-    }
-
-    public String getParams() {
-        return params;
-    }
-
-    public void setParams(String params) {
-        this.params = params;
-    }
 
     @Override
     public String toString() {
         return "StatusChange{" +
-                "deviceid='" + deviceid + '\'' +
-                ", version='" + version + '\'' +
-                ", appid='" + appid + '\'' +
-                ", ts='" + ts + '\'' +
-                ", params='" + params + '\'' +
+                "error=" + error +
+                ", sequence='" + sequence + '\'' +
+                ", userAgent='" + userAgent + '\'' +
+                ", action='" + action + '\'' +
+                ", deviceid='" + deviceid + '\'' +
+                ", apikey='" + apikey + '\'' +
+                ", selfApikey='" + selfApikey + '\'' +
+                ", params=" + params +
                 '}';
     }
 }

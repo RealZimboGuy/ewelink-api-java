@@ -1,25 +1,40 @@
 
-package com.github.realzimboguy.ewelink.api.model.devices;
+package com.github.realzimboguy.ewelink.api.model.home;
 
-import java.util.HashMap;
-import java.util.Map;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 
 public class DisableTimer {
 
+    @SerializedName("mId")
+    @Expose
     private String mId;
+    @SerializedName("type")
+    @Expose
     private String type;
+    @SerializedName("at")
+    @Expose
     private String at;
+    @SerializedName("coolkit_timer_type")
+    @Expose
     private String coolkitTimerType;
+    @SerializedName("enabled")
+    @Expose
     private Integer enabled;
-    private Do_ _do;
+    @SerializedName("do")
+    @Expose
+    private Do _do;
+    @SerializedName("period")
+    @Expose
     private String period;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public String getMId() {
+    public String getmId() {
         return mId;
     }
 
-    public void setMId(String mId) {
+    public void setmId(String mId) {
         this.mId = mId;
     }
 
@@ -55,11 +70,11 @@ public class DisableTimer {
         this.enabled = enabled;
     }
 
-    public Do_ getDo() {
+    public Do getDo() {
         return _do;
     }
 
-    public void setDo(Do_ _do) {
+    public void setDo(Do _do) {
         this._do = _do;
     }
 
@@ -69,14 +84,6 @@ public class DisableTimer {
 
     public void setPeriod(String period) {
         this.period = period;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }
