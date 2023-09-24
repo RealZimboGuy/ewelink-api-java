@@ -98,7 +98,7 @@ public class EweLink {
         loginRequest.setPassword(password);
 
 
-        System.out.println(gson.toJson(loginRequest));
+        logger.info(gson.toJson(loginRequest));
 
         conn.setRequestProperty("Content-Type","application/json" );
         conn.setRequestProperty("Authorization","Sign " +getAuthMac(gson.toJson(loginRequest)));
@@ -106,7 +106,7 @@ public class EweLink {
         conn.setRequestProperty("X-Ck-Appid",APP_ID);
 
 
-        System.out.println("Login Request:{}"+loginRequest.toString());
+        logger.info("Login Request:{}"+loginRequest.toString());
 
 
         DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
@@ -118,7 +118,7 @@ public class EweLink {
         int responseCode = conn.getResponseCode();
         InputStream is;
 
-        System.out.println("Login Response Code :"+ responseCode);
+        logger.info("Login Response Code :"+ responseCode);
 
         if (responseCode >= 400) is = conn.getErrorStream();
         else is = conn.getInputStream();
@@ -130,11 +130,11 @@ public class EweLink {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            System.out.println("Login Response Raw:{}"+response.toString());
+            logger.info("Login Response Raw:{}"+response.toString());
 
             LoginResponse loginResponse = gson.fromJson(response.toString(),LoginResponse.class);
 
-            System.out.println("Login Response:{}"+loginResponse.toString());
+            logger.info("Login Response:{}"+loginResponse.toString());
 
             if (loginResponse.getError() > 0){
                 //something wrong with login, throw exception back up with msg
@@ -143,8 +143,8 @@ public class EweLink {
             }else {
                 accessToken = loginResponse.getData().getAt();
                 apiKey = loginResponse.getData().getUser().getApikey();
-                System.out.println("accessToken:{}"+accessToken);
-                System.out.println("apiKey:{}"+apiKey);
+                logger.info("accessToken:{}"+accessToken);
+                logger.info("apiKey:{}"+apiKey);
 
                 isLoggedIn = true;
                 lastActivity = new Date().getTime();
