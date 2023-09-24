@@ -1,12 +1,12 @@
 
-package com.github.realzimboguy.ewelink.api.model.login;
+package com.github.realzimboguy.ewelink.api.model.home;
 
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class LoginResponse {
+public class Homepage {
 
     @SerializedName("error")
     @Expose
@@ -17,6 +17,15 @@ public class LoginResponse {
     @SerializedName("data")
     @Expose
     private Data data;
+
+    @Override
+    public String toString() {
+        return "Homepage{" +
+                "error=" + error +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
 
     public Integer getError() {
         return error;

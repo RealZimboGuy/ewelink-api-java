@@ -1,14 +1,16 @@
 package com.github.realzimboguy.ewelink.api;
 
 import com.github.realzimboguy.ewelink.api.errors.DeviceOfflineError;
-import com.github.realzimboguy.ewelink.api.model.devices.DeviceItem;
-import com.github.realzimboguy.ewelink.api.model.devices.Devices;
-import com.github.realzimboguy.ewelink.api.model.Status;
+import com.github.realzimboguy.ewelink.api.model.Param;
 import com.github.realzimboguy.ewelink.api.model.StatusChange;
+import com.github.realzimboguy.ewelink.api.model.home.Homepage;
+import com.github.realzimboguy.ewelink.api.model.home.Params;
+import com.github.realzimboguy.ewelink.api.model.home.Thing;
 import com.github.realzimboguy.ewelink.api.model.login.LoginRequest;
 import com.github.realzimboguy.ewelink.api.model.login.LoginResponse;
 import com.github.realzimboguy.ewelink.api.wss.WssLogin;
 import com.github.realzimboguy.ewelink.api.wss.WssResponse;
+import com.github.realzimboguy.ewelink.api.wss.wssrsp.WssRspMsg;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 
 public class EweLink {
@@ -32,8 +35,9 @@ public class EweLink {
     private static String region;
     private String email;
     private String password;
+    private String countryCode;
     private int activityTimer;
-    private String baseUrl = "https://eu-api.coolkit.cc:8080/api/";
+    private String baseUrl = "TBA";
     public static final String APP_ID = "Uw83EKZFxdif7XFXEsrpduz5YyjP7nTl";
     private static final String APP_SECRET = "mXLOjea0woSMvK9gw7Fjsy7YlFO4iSu6";
     private static boolean isLoggedIn = false;
@@ -49,12 +53,14 @@ public class EweLink {
     private static Thread webSocketMonitorThread = null;
     Gson gson = new Gson();
 
-    public EweLink(String region,String email, String password, int activityTimer) {
+    public EweLink(String region,String email, String password,String countryCode, int activityTimer) {
       this.region = region;
       this.email = email;
       this.password = password;
+      this.countryCode = countryCode;
+
       if (region!= null) {
-          baseUrl = "https://" + region + "-api.coolkit.cc:8080/api/";
+          baseUrl = "https://"+region+"-apia.coolkit.cc/v2/";
       }
       if (activityTimer < 30) {
           activityTimer = 30;
@@ -80,16 +86,27 @@ public class EweLink {
         conn.setConnectTimeout(TIMEOUT);
         conn.setReadTimeout(TIMEOUT);
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setAppid(APP_ID);
+
+
+        loginRequest.setLang("en");
+        loginRequest.setCountryCode(countryCode);
+        loginRequest.setOs("Android");
+        loginRequest.setModel("Pixel 4a (5G)_bramble");
+        loginRequest.setRomVersion("13");
+        loginRequest.setAppVersion("5.0.0");
         loginRequest.setEmail(email);
         loginRequest.setPassword(password);
-        loginRequest.setTs(new Date().getTime() + "");
-        loginRequest.setVersion("8");
-        loginRequest.setNonce(Util.getNonce());
 
+
+        System.out.println(gson.toJson(loginRequest));
+
+        conn.setRequestProperty("Content-Type","application/json" );
         conn.setRequestProperty("Authorization","Sign " +getAuthMac(gson.toJson(loginRequest)));
+        conn.setRequestProperty("X-Ck-Nonce",Util.getNonce());
+        conn.setRequestProperty("X-Ck-Appid",APP_ID);
 
-        logger.debug("Login Request:{}",loginRequest.toString());
+
+        System.out.println("Login Request:{}"+loginRequest.toString());
 
 
         DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
@@ -101,7 +118,7 @@ public class EweLink {
         int responseCode = conn.getResponseCode();
         InputStream is;
 
-        logger.debug("Login Response Code :{}",responseCode);
+        System.out.println("Login Response Code :"+ responseCode);
 
         if (responseCode >= 400) is = conn.getErrorStream();
         else is = conn.getInputStream();
@@ -113,21 +130,21 @@ public class EweLink {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            logger.debug("Login Response Raw:{}",response.toString());
+            System.out.println("Login Response Raw:{}"+response.toString());
 
             LoginResponse loginResponse = gson.fromJson(response.toString(),LoginResponse.class);
 
-            logger.debug("Login Response:{}",loginResponse.toString());
+            System.out.println("Login Response:{}"+loginResponse.toString());
 
             if (loginResponse.getError() > 0){
                 //something wrong with login, throw exception back up with msg
                 throw new Exception(loginResponse.getMsg());
 
             }else {
-                accessToken = loginResponse.getAt();
-                apiKey = loginResponse.getUser().getApikey();
-                logger.info("accessToken:{}",accessToken);
-                logger.info("apiKey:{}",apiKey);
+                accessToken = loginResponse.getData().getAt();
+                apiKey = loginResponse.getData().getUser().getApikey();
+                System.out.println("accessToken:{}"+accessToken);
+                System.out.println("apiKey:{}"+apiKey);
 
                 isLoggedIn = true;
                 lastActivity = new Date().getTime();
@@ -158,7 +175,10 @@ public class EweLink {
 
     }
 
-    public Devices getDevices() throws Exception {
+    public List<Thing> getThings() throws Exception {
+        return getHomePage().getData().getThingInfo().getThingList();
+    }
+    public Homepage getHomePage() throws Exception {
 
         if (!isLoggedIn){
             throw new Exception("Not Logged In, please call login Method");
@@ -169,19 +189,29 @@ public class EweLink {
         }
 
 
-        URL url = new URL(baseUrl + "/user/device?lang=en&appid="+APP_ID+"&ts="+new Date().getTime()+"&version=8&getTags=1");
-
+        URL url = new URL(baseUrl + "homepage");
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
+        conn.setRequestMethod("POST");
         conn.setDoInput(true);
         conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+        conn.setRequestProperty("Content-Type","application/json" );
         conn.setRequestProperty("Accept", "application/json");
         conn.setRequestProperty("Authorization","Bearer " +accessToken);
         conn.setConnectTimeout(TIMEOUT);
         conn.setReadTimeout(TIMEOUT);
 
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
 
+        wr.writeBytes(gson.toJson("{\n" +
+                "  \"getFamily\": {},\n" +
+                "  \"getThing\": {\n" +
+                "    \"num\": 300\n" +
+                "  },\n" +
+                "  \"lang\": \"en\"\n" +
+                "}"));
+
+        wr.flush();
+        wr.close();
         int responseCode = conn.getResponseCode();
         InputStream is;
 
@@ -195,27 +225,28 @@ public class EweLink {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            logger.debug("GetDevices Response Raw:{}",response.toString());
+            logger.debug("getHome Response Raw:{}",response.toString());
 
-            Devices getDevices = gson.fromJson(response.toString(), Devices.class);
+            Homepage homepage = gson.fromJson(response.toString(), Homepage.class);
 
-            logger.debug("GetDevices Response:{}",getDevices.toString());
+            logger.debug("getHome Response:{}",gson.toJson(homepage));
 
-            if (getDevices.getError() > 0){
+            if (homepage.getError() > 0){
                 //something wrong with login, throw exception back up with msg
-                throw new Exception("Get Devices Error:" + getDevices.toString());
+                throw new Exception("getHome Error:" + gson.toJson(homepage));
 
             }else {
-                logger.info("getDevices:{}",getDevices.toString());
+                logger.info("getHome:{}",gson.toJson(homepage));
                 lastActivity = new Date().getTime();
-                return getDevices;
+                return homepage;
             }
 
         }
 
     }
 
-    public DeviceItem getDevice(String deviceId) throws Exception {
+
+    public boolean setDeviceStatusByName(String name, String status) throws Exception{
 
         if (!isLoggedIn){
             throw new Exception("Not Logged In, please call login Method");
@@ -225,138 +256,10 @@ public class EweLink {
             login();
         }
 
-
-        URL url = new URL(baseUrl + "/user/device/"+deviceId+"?deviceid="+deviceId+"" +
-                "&lang=en" +
-                "&appid="+APP_ID+"" +
-                "&ts="+new Date().getTime()+"&version=8");
-
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type", "application/json; utf-8");
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setRequestProperty("Authorization","Bearer " +accessToken);
-        conn.setConnectTimeout(TIMEOUT);
-        conn.setReadTimeout(TIMEOUT);
-
-
-        int responseCode = conn.getResponseCode();
-        InputStream is;
-
-        if (responseCode >= 400) is = conn.getErrorStream();
-        else is = conn.getInputStream();
-
-        try(BufferedReader br = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), "utf-8"))) {
-            StringBuilder response = new StringBuilder();
-            String responseLine = null;
-            while ((responseLine = br.readLine()) != null) {
-                response.append(responseLine.trim());
-            }
-            logger.debug("GetDevice Response Raw:{}",response.toString());
-
-            DeviceItem device = gson.fromJson(response.toString(), DeviceItem.class);
-
-            logger.debug("GetDevice Response:{}",device.toString());
-
-            if (device.getError() > 0){
-                //something wrong with login, throw exception back up with msg
-                throw new Exception("Get Device Error:" + device.toString());
-
-            }else {
-                logger.info("getDevice:{}",device.toString());
-                lastActivity = new Date().getTime();
-                return device;
-            }
-
-        }
-
-    }
-
-    public Status getDeviceStatus(String deviceId) throws Exception {
-
-        if (!isLoggedIn){
-            throw new Exception("Not Logged In, please call login Method");
-        }
-        if (lastActivity + (activityTimer * 60 * 1000) < new Date().getTime()){
-            logger.info("Longer than last Activity, perform login Again");
-            login();
-        }
-
-
-        URL url = new URL(baseUrl + "/user/device/status?deviceid="+deviceId+"" +
-                "&lang=en" +
-                "&appid="+APP_ID+"" +
-                "&ts="+new Date().getTime()+"&version=8&params=switch|switches");
-
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type", "application/json; utf-8");
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setRequestProperty("Authorization","Bearer " +accessToken);
-        conn.setConnectTimeout(TIMEOUT);
-        conn.setReadTimeout(TIMEOUT);
-
-
-        int responseCode = conn.getResponseCode();
-        InputStream is;
-
-        if (responseCode >= 400) is = conn.getErrorStream();
-        else is = conn.getInputStream();
-
-        try(BufferedReader br = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), "utf-8"))) {
-            StringBuilder response = new StringBuilder();
-            String responseLine = null;
-            while ((responseLine = br.readLine()) != null) {
-                response.append(responseLine.trim());
-            }
-            logger.debug("Status Response Raw:{}",response.toString());
-
-            Status status = gson.fromJson(response.toString(), Status.class);
-
-            logger.debug("Status Response:{}",status.toString());
-
-            if (status.getError() > 0){
-                //something wrong with login, throw exception back up with msg
-
-                if (status.getError() == 503){
-                    throw new DeviceOfflineError("Status Error:" + status.toString());
-                }
-
-                throw new Exception("Status Error:" + status.toString());
-
-            }else {
-                logger.info("Status:{}",status.toString());
-                lastActivity = new Date().getTime();
-                //this is not returned but to be nice we do
-                status.setDeviceid(deviceId);
-                return status;
-            }
-
-        }
-
-    }
-
-    public Status setDeviceStatusByName(String name, String status) throws Exception{
-
-        if (!isLoggedIn){
-            throw new Exception("Not Logged In, please call login Method");
-        }
-        if (lastActivity + (activityTimer * 60 * 1000) < new Date().getTime()){
-            logger.info("Longer than last Activity, perform login Again");
-            login();
-        }
-
-        Devices devices = getDevices();
         String selectedDeviceId = null;
-        for (DeviceItem deviceItem : devices.getDevicelist()) {
-            if (deviceItem.getName().equalsIgnoreCase(name)){
-                selectedDeviceId = deviceItem.getDeviceid();
+        for (Thing thing : getThings()) {
+            if (thing.getItemData().getName().equalsIgnoreCase(name)){
+                selectedDeviceId = thing.getItemData().getDeviceid();
             }
         }
 
@@ -368,11 +271,33 @@ public class EweLink {
 
     }
 
-    public Status setDeviceStatus(String deviceId, String status) throws Exception{
+    public boolean setDeviceStatus(String deviceId, String status) throws Exception{
 
         if (!isLoggedIn){
             throw new Exception("Not Logged In, please call login Method");
         }
+
+        if (eweLinkWebSocketClient == null ){
+
+            //possibly means someone has called set status but not done a WSS init, we create a dummy one in this case
+            getWebSocket(new WssResponse() {
+                @Override
+                public void onMessage(String s) {
+
+                }
+
+                @Override
+                public void onMessageParsed(WssRspMsg rsp) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
+        }
+
         if (lastActivity + (activityTimer * 60 * 1000) < new Date().getTime()){
             logger.info("Longer than last Activity, perform login Again");
             login();
@@ -385,72 +310,22 @@ public class EweLink {
         }
         logger.info("Setting device {} status to {}",deviceId,status);
 
-        URL url = new URL(baseUrl + "user/device/status");
-
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type", "application/json; utf-8");
-        conn.setRequestProperty("Accept", "application/json");
-
-        conn.setConnectTimeout(TIMEOUT);
-        conn.setReadTimeout(TIMEOUT);
 
         StatusChange statusChange = new StatusChange();
-        statusChange.setAppid(APP_ID);
+        statusChange.setSequence(new Date().getTime() + "");
+        statusChange.setUserAgent("app");
+        statusChange.setAction("update");
         statusChange.setDeviceid(deviceId);
-        statusChange.setTs(new Date().getTime() + "");
-        statusChange.setVersion("8");
-        statusChange.setParams("{\"switch\":\""+status+"\"}");
+        statusChange.setApikey(apiKey);
+        statusChange.setSelfApikey(apiKey);
+        Params params = new Params();
+        params.setSwitch(status);
+        statusChange.setParams(params);
 
+        logger.debug("StatusChange WS Request:{}",gson.toJson(statusChange));
 
-        conn.setRequestProperty("Authorization","Bearer " +accessToken);
+        return eweLinkWebSocketClient.sendAndWait(gson.toJson(statusChange),statusChange.getSequence());
 
-        logger.debug("StatusChange Request:{}",statusChange.toString());
-
-
-        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-
-        wr.writeBytes(gson.toJson(statusChange));
-
-        wr.flush();
-        wr.close();
-        int responseCode = conn.getResponseCode();
-        InputStream is;
-
-        logger.debug("StatusChange Response Code :{}",responseCode);
-
-        if (responseCode >= 400) is = conn.getErrorStream();
-        else is = conn.getInputStream();
-
-        try(BufferedReader br = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), "utf-8"))) {
-            StringBuilder response = new StringBuilder();
-            String responseLine = null;
-            while ((responseLine = br.readLine()) != null) {
-                response.append(responseLine.trim());
-            }
-            logger.debug("StatusChange Response Raw:{}",response.toString());
-
-            Status statusRsp = gson.fromJson(response.toString(),Status.class);
-
-            logger.debug("StatusChange Response:{}",statusRsp.toString());
-
-            if (statusRsp.getError() > 0){
-                //something wrong with login, throw exception back up with msg
-                throw new Exception(statusRsp.getErrmsg());
-
-            }else {
-
-
-                isLoggedIn = true;
-                lastActivity = new Date().getTime();
-                return statusRsp;
-
-            }
-
-        }
 
     }
 

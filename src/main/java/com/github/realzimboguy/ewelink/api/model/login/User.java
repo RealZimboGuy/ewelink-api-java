@@ -1,169 +1,58 @@
 
 package com.github.realzimboguy.ewelink.api.model.login;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 
 public class User {
 
-    private ClientInfo clientInfo;
-    private String id;
-    private String email;
-    private String password;
-    private String appId;
-    private String apikey;
-    private String createdAt;
-    private Integer v;
-    private String lang;
-    private Boolean online;
-    private String onlineTime;
-    private List<AppInfo> appInfos = null;
-    private String ip;
-    private String location;
-    private String offlineTime;
-    private String userStatus;
-    private BindInfos bindInfos;
+    @SerializedName("timezone")
+    @Expose
+    private Timezone timezone;
+    @SerializedName("accountLevel")
+    @Expose
+    private Integer accountLevel;
+    @SerializedName("countryCode")
+    @Expose
     private String countryCode;
-    private String currentFamilyId;
-    private String language;
-    private Extra extra;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @SerializedName("email")
+    @Expose
+    private String email;
+    @SerializedName("apikey")
+    @Expose
+    private String apikey;
+    @SerializedName("accountConsult")
+    @Expose
+    private Boolean accountConsult;
+    @SerializedName("appForumEnterHide")
+    @Expose
+    private Boolean appForumEnterHide;
+    @SerializedName("appVersion")
+    @Expose
+    private String appVersion;
+    @SerializedName("denyRecharge")
+    @Expose
+    private Boolean denyRecharge;
+    @SerializedName("ipCountry")
+    @Expose
+    private String ipCountry;
 
-    public ClientInfo getClientInfo() {
-        return clientInfo;
+    public Timezone getTimezone() {
+        return timezone;
     }
 
-    public void setClientInfo(ClientInfo clientInfo) {
-        this.clientInfo = clientInfo;
+    public void setTimezone(Timezone timezone) {
+        this.timezone = timezone;
     }
 
-    public String getId() {
-        return id;
+    public Integer getAccountLevel() {
+        return accountLevel;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAppId() {
-        return appId;
-    }
-
-    public void setAppId(String appId) {
-        this.appId = appId;
-    }
-
-    public String getApikey() {
-        return apikey;
-    }
-
-    public void setApikey(String apikey) {
-        this.apikey = apikey;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Integer getV() {
-        return v;
-    }
-
-    public void setV(Integer v) {
-        this.v = v;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
-    public Boolean getOnline() {
-        return online;
-    }
-
-    public void setOnline(Boolean online) {
-        this.online = online;
-    }
-
-    public String getOnlineTime() {
-        return onlineTime;
-    }
-
-    public void setOnlineTime(String onlineTime) {
-        this.onlineTime = onlineTime;
-    }
-
-    public List<AppInfo> getAppInfos() {
-        return appInfos;
-    }
-
-    public void setAppInfos(List<AppInfo> appInfos) {
-        this.appInfos = appInfos;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getOfflineTime() {
-        return offlineTime;
-    }
-
-    public void setOfflineTime(String offlineTime) {
-        this.offlineTime = offlineTime;
-    }
-
-    public String getUserStatus() {
-        return userStatus;
-    }
-
-    public void setUserStatus(String userStatus) {
-        this.userStatus = userStatus;
-    }
-
-    public BindInfos getBindInfos() {
-        return bindInfos;
-    }
-
-    public void setBindInfos(BindInfos bindInfos) {
-        this.bindInfos = bindInfos;
+    public void setAccountLevel(Integer accountLevel) {
+        this.accountLevel = accountLevel;
     }
 
     public String getCountryCode() {
@@ -174,64 +63,60 @@ public class User {
         this.countryCode = countryCode;
     }
 
-    public String getCurrentFamilyId() {
-        return currentFamilyId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCurrentFamilyId(String currentFamilyId) {
-        this.currentFamilyId = currentFamilyId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-
-    public String getLanguage() {
-        return language;
+    public String getApikey() {
+        return apikey;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setApikey(String apikey) {
+        this.apikey = apikey;
     }
 
-    public Extra getExtra() {
-        return extra;
+    public Boolean getAccountConsult() {
+        return accountConsult;
     }
 
-    public void setExtra(Extra extra) {
-        this.extra = extra;
+    public void setAccountConsult(Boolean accountConsult) {
+        this.accountConsult = accountConsult;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    public Boolean getAppForumEnterHide() {
+        return appForumEnterHide;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    public void setAppForumEnterHide(Boolean appForumEnterHide) {
+        this.appForumEnterHide = appForumEnterHide;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "clientInfo=" + clientInfo +
-                ", id='" + id + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", appId='" + appId + '\'' +
-                ", apikey='" + apikey + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", v=" + v +
-                ", lang='" + lang + '\'' +
-                ", online=" + online +
-                ", onlineTime='" + onlineTime + '\'' +
-                ", appInfos=" + appInfos +
-                ", ip='" + ip + '\'' +
-                ", location='" + location + '\'' +
-                ", offlineTime='" + offlineTime + '\'' +
-                ", userStatus='" + userStatus + '\'' +
-                ", bindInfos=" + bindInfos +
-                ", countryCode='" + countryCode + '\'' +
-                ", currentFamilyId='" + currentFamilyId + '\'' +
-                ", language='" + language + '\'' +
-                ", extra=" + extra +
-                ", additionalProperties=" + additionalProperties +
-                '}';
+    public String getAppVersion() {
+        return appVersion;
     }
+
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
+    }
+
+    public Boolean getDenyRecharge() {
+        return denyRecharge;
+    }
+
+    public void setDenyRecharge(Boolean denyRecharge) {
+        this.denyRecharge = denyRecharge;
+    }
+
+    public String getIpCountry() {
+        return ipCountry;
+    }
+
+    public void setIpCountry(String ipCountry) {
+        this.ipCountry = ipCountry;
+    }
+
 }

@@ -1,7 +1,9 @@
 
 package com.github.realzimboguy.ewelink.api.wss.wssrsp;
 
-import com.github.realzimboguy.ewelink.api.model.devices.Params;
+
+
+import com.github.realzimboguy.ewelink.api.model.home.Params;
 
 import java.util.HashMap;
 import java.util.Map;

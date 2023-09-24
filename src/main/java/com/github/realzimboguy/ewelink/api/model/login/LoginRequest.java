@@ -2,20 +2,29 @@ package com.github.realzimboguy.ewelink.api.model.login;
 
 public class LoginRequest {
 
-    private String appid;
+    private String lang;
+    private String countryCode;
     private String email;
-    private String phoneNumber;
     private String password;
-    private String ts;
-    private String version;
-    private String nonce;
+    private String os;
+    private String model;
+    private String romVersion;
+    private String appVersion;
 
-    public String getAppid() {
-        return appid;
+    public String getLang() {
+        return lang;
     }
 
-    public void setAppid(String appid) {
-        this.appid = appid;
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 
     public String getEmail() {
@@ -26,14 +35,6 @@ public class LoginRequest {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -42,40 +43,49 @@ public class LoginRequest {
         this.password = password;
     }
 
-    public String getTs() {
-        return ts;
+    public String getOs() {
+        return os;
     }
 
-    public void setTs(String ts) {
-        this.ts = ts;
+    public void setOs(String os) {
+        this.os = os;
     }
 
-    public String getVersion() {
-        return version;
+    public String getModel() {
+        return model;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setModel(String model) {
+        this.model = model;
     }
 
-    public String getNonce() {
-        return nonce;
+    public String getRomVersion() {
+        return romVersion;
     }
 
-    public void setNonce(String nonce) {
-        this.nonce = nonce;
+    public void setRomVersion(String romVersion) {
+        this.romVersion = romVersion;
+    }
+
+    public String getAppVersion() {
+        return appVersion;
+    }
+
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
     }
 
     @Override
     public String toString() {
         return "LoginRequest{" +
-                "appid='" + appid + '\'' +
+                "lang='" + lang + '\'' +
+                ", countryCode='" + countryCode + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
                 ", password='" + password + '\'' +
-                ", ts='" + ts + '\'' +
-                ", version='" + version + '\'' +
-                ", nonce='" + nonce + '\'' +
+                ", os='" + os + '\'' +
+                ", model='" + model + '\'' +
+                ", romVersion='" + romVersion + '\'' +
+                ", appVersion='" + appVersion + '\'' +
                 '}';
     }
 }

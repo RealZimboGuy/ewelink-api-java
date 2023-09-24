@@ -1,19 +1,37 @@
 
-package com.github.realzimboguy.ewelink.api.model.devices;
+package com.github.realzimboguy.ewelink.api.model.home;
 
-import java.util.HashMap;
-import java.util.Map;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 
 public class Settings {
 
+    @SerializedName("opsNotify")
+    @Expose
     private Integer opsNotify;
+    @SerializedName("opsHistory")
+    @Expose
     private Integer opsHistory;
+    @SerializedName("alarmNotify")
+    @Expose
     private Integer alarmNotify;
+    @SerializedName("wxAlarmNotify")
+    @Expose
     private Integer wxAlarmNotify;
+    @SerializedName("wxOpsNotify")
+    @Expose
     private Integer wxOpsNotify;
+    @SerializedName("wxDoorbellNotify")
+    @Expose
     private Integer wxDoorbellNotify;
+    @SerializedName("appDoorbellNotify")
+    @Expose
     private Integer appDoorbellNotify;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @SerializedName("offlineNotify")
+    @Expose
+    private Integer offlineNotify;
 
     public Integer getOpsNotify() {
         return opsNotify;
@@ -71,12 +89,12 @@ public class Settings {
         this.appDoorbellNotify = appDoorbellNotify;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    public Integer getOfflineNotify() {
+        return offlineNotify;
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    public void setOfflineNotify(Integer offlineNotify) {
+        this.offlineNotify = offlineNotify;
     }
 
 }

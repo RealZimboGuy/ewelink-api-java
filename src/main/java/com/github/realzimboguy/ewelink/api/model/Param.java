@@ -7,6 +7,13 @@ public class Param {
     @SerializedName("switch")
     private String switchValue;
 
+    public Param() {
+    }
+
+    public Param(String switchValue) {
+        this.switchValue = switchValue;
+    }
+
     public String getSwitchValue() {
         return switchValue;
     }
