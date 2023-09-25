@@ -61,7 +61,9 @@ public class EweLinkWebSocketClient extends WebSocketClient {
 
     private void parseMessage(String s) {
         WssRspMsg rsp = gson.fromJson(s, WssRspMsg.class);
-        map.put(rsp.getSequence(), rsp);
+        if (s != null && rsp.getSequence()!= null){
+            map.put(rsp.getSequence(), rsp);
+        }
 
         wssResponse.onMessageParsed(rsp);
     }
