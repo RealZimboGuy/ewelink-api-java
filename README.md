@@ -45,8 +45,6 @@ Homepage is the base endpoint that returns all the information about your accoun
 
 sample 
 
-     EweLink eweLink = new EweLink("eu","username@gmail.com","password",60);
-
         Gson gson = new Gson();
         EweLink eweLink = new EweLink("eu", "test@gmail.com", "test", "+263",60);
 
