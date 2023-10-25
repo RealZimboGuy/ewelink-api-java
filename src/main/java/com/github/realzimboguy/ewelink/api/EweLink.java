@@ -4,6 +4,7 @@ import com.github.realzimboguy.ewelink.api.errors.DeviceOfflineError;
 import com.github.realzimboguy.ewelink.api.model.Param;
 import com.github.realzimboguy.ewelink.api.model.StatusChange;
 import com.github.realzimboguy.ewelink.api.model.home.Homepage;
+import com.github.realzimboguy.ewelink.api.model.home.OutletSwitch;
 import com.github.realzimboguy.ewelink.api.model.home.Params;
 import com.github.realzimboguy.ewelink.api.model.home.Thing;
 import com.github.realzimboguy.ewelink.api.model.login.LoginRequest;
@@ -320,6 +321,68 @@ public class EweLink {
         statusChange.setSelfApikey(apiKey);
         Params params = new Params();
         params.setSwitch(status);
+        statusChange.setParams(params);
+
+        logger.debug("StatusChange WS Request:{}",gson.toJson(statusChange));
+
+        return eweLinkWebSocketClient.sendAndWait(gson.toJson(statusChange),statusChange.getSequence());
+
+
+    }
+
+    /**
+     * you will need to populate the outlet switch based on the type device you have and not just the one you want to change (i think), not sure if this will break if you send more or less outlets than requred,example
+     * output
+     * "switches": [ { "switch": "off", "outlet": 0 }, { "switch": "on", "outlet": 1 }, { "switch": "off", "outlet": 2 }, { "switch": "off", "outlet": 3 } ]
+     * @param deviceId
+     * @param outletSwitches
+     * @return
+     * @throws Exception
+     */
+    public boolean setMultiDeviceStatus(String deviceId, List<OutletSwitch> outletSwitches) throws Exception{
+
+        if (!isLoggedIn){
+            throw new Exception("Not Logged In, please call login Method");
+        }
+
+        if (eweLinkWebSocketClient == null ){
+
+            //possibly means someone has called set status but not done a WSS init, we create a dummy one in this case
+            getWebSocket(new WssResponse() {
+                @Override
+                public void onMessage(String s) {
+
+                }
+
+                @Override
+                public void onMessageParsed(WssRspMsg rsp) {
+
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
+        }
+
+        if (lastActivity + (activityTimer * 60 * 1000) < new Date().getTime()){
+            logger.info("Longer than last Activity, perform login Again");
+            login();
+        }
+
+        logger.info("Setting device {} status on multi output {}",deviceId,gson.toJson(outletSwitches));
+
+
+        StatusChange statusChange = new StatusChange();
+        statusChange.setSequence(new Date().getTime() + "");
+        statusChange.setUserAgent("app");
+        statusChange.setAction("update");
+        statusChange.setDeviceid(deviceId);
+        statusChange.setApikey(apiKey);
+        statusChange.setSelfApikey(apiKey);
+        Params params = new Params();
+        params.setSwitches(outletSwitches);
         statusChange.setParams(params);
 
         logger.debug("StatusChange WS Request:{}",gson.toJson(statusChange));
