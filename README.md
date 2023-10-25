@@ -4,7 +4,7 @@
 
 Website doc: http://ewelink-api-java.co.zw
 
-** 3.0.0-RELEASE ** BREAKING CHANGES prior V2.X.X nolonger working due to ewelik api changes
+** 3.1.0-RELEASE ** BREAKING CHANGES prior V2.X.X nolonger working due to ewelik api changes
 
 
 
@@ -13,7 +13,7 @@ Import
     <dependency>
       <groupId>com.github.realzimboguy.ewelink.api</groupId>
       <artifactId>ewelink-api-java</artifactId>
-      <version>3.0.1-RELEASE</version>
+      <version>3.1.0-RELEASE</version>
     </dependency>
 
 

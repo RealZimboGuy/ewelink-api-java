@@ -45,6 +45,9 @@ public class Params {
     @SerializedName("switch")
     @Expose
     private String _switch;
+    @SerializedName("switches")
+    @Expose
+    private List<OutletSwitch> switches;
     @SerializedName("startup")
     @Expose
     private String startup;
@@ -439,4 +442,13 @@ public class Params {
         this.startTime = startTime;
     }
 
+    public List<OutletSwitch> getSwitches() {
+
+        return switches;
+    }
+
+    public void setSwitches(List<OutletSwitch> switches) {
+
+        this.switches = switches;
+    }
 }
