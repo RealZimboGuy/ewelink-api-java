@@ -43,6 +43,9 @@ Homepage is the base endpoint that returns all the information about your accoun
 
     public boolean setDeviceStatusByName(String name, String status) throws Exception
 
+    //ie. used for TX2CH devices
+    public boolean setMultiDeviceStatus(String deviceId, List<OutletSwitch> outletSwitches) throws Exception
+
 sample 
 
         Gson gson = new Gson();
