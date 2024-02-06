@@ -5,6 +5,8 @@ package com.github.realzimboguy.ewelink.api.model.home;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 
 public class Data {
 
@@ -15,12 +17,18 @@ public class Data {
     @Expose
     private ThingInfo thingInfo;
 
-    @Override
-    public String toString() {
-        return "Data{" +
-                "familyInfo=" + familyInfo +
-                ", thingInfo=" + thingInfo +
-                '}';
+    @SerializedName("thingList")
+    @Expose
+    private List<Thing> thingList;
+
+    public List<Thing> getThingList() {
+
+        return thingList;
+    }
+
+    public void setThingList(List<Thing> thingList) {
+
+        this.thingList = thingList;
     }
 
     public FamilyInfo getFamilyInfo() {
@@ -39,4 +47,13 @@ public class Data {
         this.thingInfo = thingInfo;
     }
 
+    @Override
+    public String toString() {
+
+        return "Data{" +
+                "familyInfo=" + familyInfo +
+                ", thingInfo=" + thingInfo +
+                ", thingList=" + thingList +
+                '}';
+    }
 }

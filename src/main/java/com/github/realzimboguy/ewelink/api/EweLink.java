@@ -179,6 +179,58 @@ public class EweLink {
     public List<Thing> getThings() throws Exception {
         return getHomePage().getData().getThingInfo().getThingList();
     }
+    public List<Thing> getThings(String familyId) throws Exception {
+
+        if (!isLoggedIn){
+            throw new Exception("Not Logged In, please call login Method");
+        }
+        if (lastActivity + (activityTimer * 60 * 1000) < new Date().getTime()){
+            logger.info("Longer than last Activity, perform login Again");
+            login();
+        }
+
+
+        URL url = new URL(baseUrl + "device/thing?familyid="+familyId+"&num=30&beginIndex=-999999");
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-Type","application/json" );
+        conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestProperty("Authorization","Bearer " +accessToken);
+        conn.setConnectTimeout(TIMEOUT);
+        conn.setReadTimeout(TIMEOUT);
+
+        int responseCode = conn.getResponseCode();
+        InputStream is;
+
+        if (responseCode >= 400) is = conn.getErrorStream();
+        else is = conn.getInputStream();
+
+        try(BufferedReader br = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), "utf-8"))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            logger.debug("getHome Response Raw:{}",response.toString());
+
+            Homepage homepage = gson.fromJson(response.toString(), Homepage.class);
+
+            logger.debug("getHome Response:{}",gson.toJson(homepage));
+
+            if (homepage.getError() > 0){
+                //something wrong with login, throw exception back up with msg
+                throw new Exception("getHome Error:" + gson.toJson(homepage));
+
+            }else {
+                logger.info("getHome:{}",gson.toJson(homepage));
+                lastActivity = new Date().getTime();
+                return homepage.getData().getThingList();
+            }
+
+        }
+
+    }
     public Homepage getHomePage() throws Exception {
 
         if (!isLoggedIn){

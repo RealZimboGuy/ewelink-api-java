@@ -13,7 +13,7 @@ Import
     <dependency>
       <groupId>com.github.realzimboguy.ewelink.api</groupId>
       <artifactId>ewelink-api-java</artifactId>
-      <version>3.1.0-RELEASE</version>
+      <version>3.2.0-RELEASE</version>
     </dependency>
 
 
@@ -38,6 +38,9 @@ Homepage is the base endpoint that returns all the information about your accoun
     public Homepage getHomePage() throws Exception 
 
     public List<Thing> getThings() throws Exception 
+
+    //use the getHomePage() to find the family IDs 
+    public List<Thing> getThings(String familyId) throws Exception 
 
     public boolean setDeviceStatus(String deviceId, String status) throws Exception
 
