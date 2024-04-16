@@ -6,7 +6,7 @@
 
     <groupId>com.github.realzimboguy.ewelink.api</groupId>
     <artifactId>ewelink-api-java</artifactId>
-    <version>3.2.0-RELEASE</version>
+    <version>3.2.1-RELEASE</version>
     <packaging>jar</packaging>
 
     <name>ewelink-api-java</name>
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
-            <version>1.5.1</version>
+            <version>1.5.6</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
