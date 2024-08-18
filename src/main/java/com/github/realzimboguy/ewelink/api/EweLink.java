@@ -3,6 +3,7 @@ package com.github.realzimboguy.ewelink.api;
 import com.github.realzimboguy.ewelink.api.errors.DeviceOfflineError;
 import com.github.realzimboguy.ewelink.api.model.Param;
 import com.github.realzimboguy.ewelink.api.model.StatusChange;
+import com.github.realzimboguy.ewelink.api.model.family.FamilyPage;
 import com.github.realzimboguy.ewelink.api.model.home.Homepage;
 import com.github.realzimboguy.ewelink.api.model.home.OutletSwitch;
 import com.github.realzimboguy.ewelink.api.model.home.Params;
@@ -27,6 +28,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class EweLink {
@@ -177,7 +179,15 @@ public class EweLink {
     }
 
     public List<Thing> getThings() throws Exception {
-        return getHomePage().getData().getThingInfo().getThingList();
+        return getFamily().getData().getFamilyList().stream()
+                .map(family -> {
+                    try {
+                        return getThings(family.getId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }).flatMap(List::stream).collect(Collectors.toList());
     }
     public List<Thing> getThings(String familyId) throws Exception {
 
@@ -231,7 +241,7 @@ public class EweLink {
         }
 
     }
-    public Homepage getHomePage() throws Exception {
+    public FamilyPage getFamily() throws Exception {
 
         if (!isLoggedIn){
             throw new Exception("Not Logged In, please call login Method");
@@ -242,29 +252,15 @@ public class EweLink {
         }
 
 
-        URL url = new URL(baseUrl + "homepage");
+        URL url = new URL(baseUrl + "family");
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
+        conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-Type","application/json" );
         conn.setRequestProperty("Accept", "application/json");
         conn.setRequestProperty("Authorization","Bearer " +accessToken);
         conn.setConnectTimeout(TIMEOUT);
         conn.setReadTimeout(TIMEOUT);
 
-        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-
-        wr.writeBytes(gson.toJson("{\n" +
-                "  \"getFamily\": {},\n" +
-                "  \"getThing\": {\n" +
-                "    \"num\": 300\n" +
-                "  },\n" +
-                "  \"lang\": \"en\"\n" +
-                "}"));
-
-        wr.flush();
-        wr.close();
         int responseCode = conn.getResponseCode();
         InputStream is;
 
@@ -278,20 +274,20 @@ public class EweLink {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            logger.debug("getHome Response Raw:{}",response.toString());
+            logger.debug("getFamily Response Raw:{}",response.toString());
 
-            Homepage homepage = gson.fromJson(response.toString(), Homepage.class);
+            FamilyPage familyPage = gson.fromJson(response.toString(), FamilyPage.class);
 
-            logger.debug("getHome Response:{}",gson.toJson(homepage));
+            logger.debug("getFamily Response:{}",gson.toJson(familyPage));
 
-            if (homepage.getError() > 0){
+            if (familyPage.getError() > 0){
                 //something wrong with login, throw exception back up with msg
-                throw new Exception("getHome Error:" + gson.toJson(homepage));
+                throw new Exception("getFamily Error:" + gson.toJson(familyPage));
 
             }else {
-                logger.info("getHome:{}",gson.toJson(homepage));
+                logger.info("getFamily:{}",gson.toJson(familyPage));
                 lastActivity = new Date().getTime();
-                return homepage;
+                return familyPage;
             }
 
         }
