@@ -200,7 +200,7 @@ public class EweLink {
         }
 
 
-        URL url = new URL(baseUrl + "device/thing?familyid="+familyId+"&num=30&beginIndex=-999999");
+        URL url = new URL(baseUrl + "device/thing?familyid="+familyId+"&num=300&beginIndex=-999999");
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-Type","application/json" );

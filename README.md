@@ -13,7 +13,7 @@ Import
     <dependency>
       <groupId>com.github.realzimboguy.ewelink.api</groupId>
       <artifactId>ewelink-api-java</artifactId>
-      <version>3.3.0-RELEASE</version>
+      <version>3.3.1-RELEASE</version>
     </dependency>
 
 
