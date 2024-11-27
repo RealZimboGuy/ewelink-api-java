@@ -328,6 +328,8 @@ public class EweLink {
 
         if (eweLinkWebSocketClient == null ){
 
+            logger.info("No WSS Connection, creating one");
+
             //possibly means someone has called set status but not done a WSS init, we create a dummy one in this case
             getWebSocket(new WssResponse() {
                 @Override
@@ -344,7 +346,18 @@ public class EweLink {
                 public void onError(String error) {
 
                 }
+
             });
+
+            //we need to wait for the WSS to connect
+           for (int i = 0; i < 100; i++) {
+               if (eweLinkWebSocketClient.isOpen()){
+                   logger.info("WSS Connected");
+                   break;
+               }
+               Thread.sleep(100);
+           }
+
         }
 
         if (lastActivity + (activityTimer * 60 * 1000) < new Date().getTime()){
@@ -395,6 +408,8 @@ public class EweLink {
 
         if (eweLinkWebSocketClient == null ){
 
+            logger.info("No WSS Connection, creating one");
+
             //possibly means someone has called set status but not done a WSS init, we create a dummy one in this case
             getWebSocket(new WssResponse() {
                 @Override
@@ -412,6 +427,16 @@ public class EweLink {
 
                 }
             });
+
+            //we need to wait for the WSS to connect
+            for (int i = 0; i < 100; i++) {
+                if (eweLinkWebSocketClient.isOpen()){
+                    logger.info("WSS Connected");
+                    break;
+                }
+                Thread.sleep(100);
+            }
+
         }
 
         if (lastActivity + (activityTimer * 60 * 1000) < new Date().getTime()){
