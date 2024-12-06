@@ -129,6 +129,24 @@ public class Params {
     @SerializedName("startTime")
     @Expose
     private String startTime;
+    @SerializedName("subDevId")
+    @Expose
+    private String subDevId;
+    @SerializedName("parentid")
+    @Expose
+    private String parentid;
+    @SerializedName("battery")
+    @Expose
+    private String battery;
+    @SerializedName("trigTime")
+    @Expose
+    private String trigTime;
+    @SerializedName("temperature")
+    @Expose
+    private String temperature;
+    @SerializedName("humidity")
+    @Expose
+    private String humidity;
 
     public BindInfos getBindInfos() {
         return bindInfos;
@@ -450,5 +468,65 @@ public class Params {
     public void setSwitches(List<OutletSwitch> switches) {
 
         this.switches = switches;
+    }
+
+    public String getSubDevId() {
+
+        return subDevId;
+    }
+
+    public void setSubDevId(String subDevId) {
+
+        this.subDevId = subDevId;
+    }
+
+    public String getParentid() {
+
+        return parentid;
+    }
+
+    public void setParentid(String parentid) {
+
+        this.parentid = parentid;
+    }
+
+    public String getBattery() {
+
+        return battery;
+    }
+
+    public void setBattery(String battery) {
+
+        this.battery = battery;
+    }
+
+    public String getTrigTime() {
+
+        return trigTime;
+    }
+
+    public void setTrigTime(String trigTime) {
+
+        this.trigTime = trigTime;
+    }
+
+    public String getTemperature() {
+
+        return temperature;
+    }
+
+    public void setTemperature(String temperature) {
+
+        this.temperature = temperature;
+    }
+
+    public String getHumidity() {
+
+        return humidity;
+    }
+
+    public void setHumidity(String humidity) {
+
+        this.humidity = humidity;
     }
 }
