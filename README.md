@@ -2,7 +2,6 @@
 # ewelink-api-java
 > eWeLink API written in JAVA
 
-Website doc: http://ewelink-api-java.co.zw
 
 ** 3.3.3-RELEASE ** BREAKING CHANGES prior V2.X.X nolonger working due to ewelik api changes
 
