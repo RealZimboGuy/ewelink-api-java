@@ -8,13 +8,13 @@
 
 
 Import
-
+```xml
     <dependency>
       <groupId>com.github.realzimboguy.ewelink.api</groupId>
       <artifactId>ewelink-api-java</artifactId>
       <version>3.3.3-RELEASE</version>
     </dependency>
-
+```
 
 Usage
 
@@ -31,7 +31,7 @@ Params for the EWeLink Constructor
 You must perform a login before calling any other methods, the methods exposed are:
 
 Homepage is the base endpoint that returns all the information about your account, devices, scenes, timers etc.
-
+```java
     public void login() throws Exception
 
     public FamilyPage getFamily() throws Exception 
@@ -47,9 +47,9 @@ Homepage is the base endpoint that returns all the information about your accoun
 
     //ie. used for TX2CH devices
     public boolean setMultiDeviceStatus(String deviceId, List<OutletSwitch> outletSwitches) throws Exception
-
+```
 sample 
-
+```java
         Gson gson = new Gson();
         EweLink eweLink = new EweLink("eu", "test@gmail.com", "test", "+263",60);
 
@@ -127,6 +127,6 @@ sample
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+```
 tags: 
 sonoff eweelink api automation java code library
